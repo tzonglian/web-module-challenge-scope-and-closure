@@ -63,8 +63,13 @@ dansRoll();
 ```
 
 a. Where is closure used in this code? How can you tell?
+/* The second function (the one in the return) needs to look up whatto input for the variable "name", as it's not defined in the return function. */
+
 b. Compare and contrast calling `dansRoll` the first and second time. What is always the same? What could change?
+/* Javascript is a 2-pass compiler.  First, dansRoll is assign a reference (const dansRoll).  Then, dansRoll is calculated the first time.  The second time, it already caches the data.  dansRoll is a const, so it can never be changed.  If dansRoll was defined as a let, theoretically, dansRoll could be changed every time the function is run.
+
 c. What is the lexical scope of `newRoll`? 
+/*  newRoll is a nested function, so it has access to the 'name' variable, in its parents' parents' function. */
 
 ### Task 2c - Exit Ticket
 
