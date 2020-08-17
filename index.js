@@ -41,26 +41,30 @@ function counterMaker() {
    return count++;
   }
 }
-
 const counter1 = counterMaker();
 
 // counter2 code
 let count = 0;
-
 function counter2() {
   return count++;
 }
+
+console.log(counter1());
+console.log(counter2());
+
+//1. They have the same result.  counter1 uses a callback function, while counter2 alters a global variable (count).
+//2. counter2 uses a closure, because it references the variable count outside of its function.
+//3. counter1 increments 'count' in a self-contained way.  Other functions (such as count2) can't accidentally modify it.  Use counter2 modifies 'count' outside of its function.  It is used when 'count' needs to be globally available (such as modified in another function).
 
 
 /* Task 2: inning() 
 
 Write a function called `inning` that returns a random number of points that a team scored in an inning. This should be a whole number between 0 and 2. */
 
-function inning(/*Code Here*/){
+inning = () => Math.floor(Math.random() * 3);
 
-    /*Code Here*/
-
-}
+/* TEST CODE*/
+console.log(inning());
 
 /* Task 3: finalScore()
 
@@ -76,11 +80,25 @@ finalScore(inning, 9) might return:
 
 */ 
 
-function finalScore(/*code Here*/){
 
-  /*Code Here*/
+function finalScore(callInning, numInnings){
+  let finScore;
+  /* console.log('check '+finScore + ' '+ numInnings); TEST CODE */
 
-}
+  function calcScore() {
+    finScore = 0;
+    for (let i=0; i<numInnings; i++){      
+      finScore = finScore + callInning(); 
+      /* console.log(finScore+' at i = '+i); TEST CODE */
+    };
+    /* console.log('check2 '+finScore + ' '+ numInnings); TEST CODE */
+    return finScore;
+  };
+
+  return {Home:(calcScore(numInnings)), Away: (calcScore(numInnings))};
+};
+
+console.log(finalScore(inning, 9));
 
 /* Task 4: 
 
@@ -103,8 +121,29 @@ and returns the score at each pont in the game, like so:
 Final Score: awayTeam - homeTeam */
 
 
-function scoreboard(/* CODE HERE */) {
-  /* CODE HERE */
-}
+function getInningScore(inning_cb, numInnings_param){
+  scoreArr = [{awayScore: 0, homeScore: 0}]; /*initialize*/
+  for (let i=1; i<numInnings_param+1; i++){
+    scoreArr.push({
+        awayScore: scoreArr[i-1].awayScore + inning_cb(), 
+        homeScore: scoreArr[i-1].homeScore + inning_cb() });
+  }
+  scoreArr.shift(); /*remove initializing array*/
+  return scoreArr; /*object of whole game scores*/
+};
 
+/*TEST CODE*/
+console.log(getInningScore(inning,9));
+
+function scoreboard(getInningScore_cb, inning_cb, numInnings_param) {
+  let score = getInningScore_cb(inning_cb, numInnings_param);
+  console.log(score);
+  
+  return `Inning ${numInnings_param}: ${score[numInnings_param-1].awayScore} - ${score[numInnings_param-1].homeScore}`;
+  
+};
+
+/*TEST CODE*/
+console.log(scoreboard(getInningScore,inning,4));
+console.log(scoreboard(getInningScore,inning,9));
 
